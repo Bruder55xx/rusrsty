@@ -3,16 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
 from datetime import datetime
-from keep_alive import keep_alive
-from flask import Flask
-import threading
-
-# Flask uygulaması
-app = Flask(__name__)
-
-@app.route('/')
-def index():
-    return "Hello World!"
+from keep_alive import keep_alive  # keep_alive.py dosyasını içe aktar
 
 # URL ve Telegram bilgileri
 url = "https://rustypot.com/coinflip"
@@ -57,11 +48,5 @@ def kontrol_et():
 
 # Ana program
 if __name__ == "__main__":
-    # Keep alive fonksiyonunu çağır
-    keep_alive()
-
-    # Giveaway kontrol fonksiyonunu ayrı bir iş parçacığında çalıştır
-    threading.Thread(target=kontrol_et, daemon=True).start()
-
-    # Flask uygulamasını başlat
-    app.run(debug=True, use_reloader=False)  # Reloader kapatıldı çünkü zaten ayrı bir iş parçacığında çalışıyoruz
+    keep_alive()  # Flask sunucusunu başlat
+    kontrol_et()  # Giveaway kontrol fonksiyonunu başlat
