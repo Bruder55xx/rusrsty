@@ -4,4 +4,3 @@ loguru
 datetime  
 requests
 selenium
-threading
