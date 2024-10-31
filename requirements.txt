@@ -1,6 +1,4 @@
-Flask
-websockets
-loguru
-datetime  
-requests
-selenium
+Flask==2.2.2
+selenium==4.21.0
+requests==2.31.0
+loguru==0.7.0
