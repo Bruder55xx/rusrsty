@@ -5,7 +5,7 @@ import time
 import websockets
 from datetime import datetime
 from keep_alive import keep_alive  # keep_alive.py dosyasını içe aktar
-
+from flask import Flask
 # Flask application
 app = Flask(__name__)
 
