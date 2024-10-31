@@ -4,18 +4,16 @@ from selenium.webdriver.common.by import By
 import time
 from datetime import datetime
 from keep_alive import keep_alive
-import websockets
-from loguru import logger
 from flask import Flask
-# Flask application
+import threading
+
+# Flask uygulaması
 app = Flask(__name__)
 
 @app.route('/')
 def index():
     return "Hello World!"
 
-def run_flask():
-    app.run(debug=True)
 # URL ve Telegram bilgileri
 url = "https://rustypot.com/coinflip"
 telegram_token = '7725393384:AAHooYoNdX9cSLYmhYvqa1_mOBJJ51UFOs4'
@@ -34,23 +32,36 @@ def telegram_mesaj_gonder(mesaj):
     }
     requests.post(telegram_url, params=params)
 
-while True:
-    try:
-        # Flash giveaway başlangıcını kontrol et
-        flash_giveaway = driver.find_element(By.ID, "fgStartingSoon")
+# Giveaway'ı kontrol eden fonksiyon
+def kontrol_et():
+    while True:
+        try:
+            # Flash giveaway başlangıcını kontrol et
+            flash_giveaway = driver.find_element(By.ID, "fgStartingSoon")
 
-        # Eğer div görünür hale geldiyse, giveaway başlamıştır
-        if flash_giveaway.is_displayed():
-            now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            mesaj = f"Flash giveaway başladı! Zaman: {now}"
-            telegram_mesaj_gonder(mesaj)
-            print(mesaj)
+            # Eğer div görünür hale geldiyse, giveaway başlamıştır
+            if flash_giveaway.is_displayed():
+                now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                mesaj = f"Flash giveaway başladı! Zaman: {now}"
+                telegram_mesaj_gonder(mesaj)
+                print(mesaj)
 
-            # Giveaway başladıktan sonra 1.5 dakika bekle ve tekrar kontrol et
-            time.sleep(90)  # 1.5 dakika bekle
-            continue  # Ana döngüye dön
+                # Giveaway başladıktan sonra 1.5 dakika bekle ve tekrar kontrol et
+                time.sleep(90)  # 1.5 dakika bekle
+                continue  # Ana döngüye dön
 
-    except Exception as e:
-        print("Henüz başlamadı veya bir hata oluştu:", e)
+        except Exception as e:
+            print("Henüz başlamadı veya bir hata oluştu:", e)
 
-    time.sleep(60)  # Giveaway başlamadıysa 1 dakika sonra tekrar kontrol et
+        time.sleep(2)  # 2 saniye bekle
+
+# Ana program
+if __name__ == "__main__":
+    # Keep alive fonksiyonunu çağır
+    keep_alive()
+
+    # Giveaway kontrol fonksiyonunu ayrı bir iş parçacığında çalıştır
+    threading.Thread(target=kontrol_et, daemon=True).start()
+
+    # Flask uygulamasını başlat
+    app.run(debug=True, use_reloader=False)  # Reloader kapatıldı çünkü zaten ayrı bir iş parçacığında çalışıyoruz
