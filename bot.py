@@ -2,9 +2,19 @@ import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
+import websockets
 from datetime import datetime
 from keep_alive import keep_alive  # keep_alive.py dosyasını içe aktar
 
+# Flask application
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return "Hello World!"
+
+def run_flask():
+    app.run(debug=True)
 # URL ve Telegram bilgileri
 url = "https://rustypot.com/coinflip"
 telegram_token = '7725393384:AAHooYoNdX9cSLYmhYvqa1_mOBJJ51UFOs4'
