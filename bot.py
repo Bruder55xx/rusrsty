@@ -2,19 +2,9 @@ import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
-import websockets
+
 from datetime import datetime
-from keep_alive import keep_alive  # keep_alive.py dosyasını içe aktar
-from flask import Flask
-# Flask application
 
-
-@app.route('/')
-def index():
-    return "Hello World!"
-
-def run_flask():
-    app.run(debug=True)
 # URL ve Telegram bilgileri
 url = "https://rustypot.com/coinflip"
 telegram_token = '7725393384:AAHooYoNdX9cSLYmhYvqa1_mOBJJ51UFOs4'
@@ -56,7 +46,3 @@ def kontrol_et():
 
         time.sleep(2)  # 2 saniye bekle
 
-# Ana program
-if __name__ == "__main__":
-    keep_alive()  # Flask sunucusunu başlat
-    kontrol_et()  # Giveaway kontrol fonksiyonunu başlat
